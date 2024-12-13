@@ -64,7 +64,7 @@ enum Roles: string
         label: 'Role With Meta',
         meta: [
             'key' => 'value',
-        ]
+        ],
     )]
     case RoleWithMeta = 'role_with_meta';
 }

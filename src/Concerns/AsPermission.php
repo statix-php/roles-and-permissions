@@ -55,6 +55,25 @@ trait AsPermission
         return $description;
     }
 
+    public function getMeta(): Collection
+    {
+        /** @var BackedEnum $this */
+        $reflection = new ReflectionEnumUnitCase(self::class, $this->name);
+
+        $attributes = $reflection->getAttributes(Describe::class);
+
+        $meta = collect();
+
+        if (count($attributes) > 0) {
+            /** @var Describe $describe */
+            $describe = $attributes[0]->newInstance();
+
+            $meta = collect($describe->meta ?: []);
+        }
+
+        return $meta;
+    }
+
     public function getRoles(bool $includeIndirectRoles = true): Collection
     {
         /** @var BackedEnum $this */
@@ -72,15 +91,8 @@ trait AsPermission
         }
 
         if ($includeIndirectRoles) {
-            /** @var BackedEnum $enumClass */
-            $enumClass = config('sentra.roles_enum');
-
-            $enum = collect($enumClass::cases());
-
-            $roles = $roles->merge($enum->filter(function ($role) {
-                /** @var AsRole $role */
-                return $role->getPermissions(false)->contains($this);
-            }));
+            /** @var AsPermission $this */
+            $roles = $roles->merge($this->getIndirectRoles());
         }
 
         return $roles;
@@ -93,6 +105,24 @@ trait AsPermission
 
     public function getIndirectRoles(): Collection
     {
-        return $this->getRoles()->diff($this->getDirectRoles());
+        /** @var BackedEnum $enumClass */
+        $enumClass = config('sentra.roles_enum');
+
+        $enum = collect($enumClass::cases());
+
+        $roles = collect();
+
+        $roles = $roles->merge($enum->filter(function ($role) {
+            /** @var AsRole $role */
+            return $role->getPermissions(false)->contains($this);
+        }));
+
+        return $roles;
+    }
+
+    public function attachedToRole(BackedEnum $role): bool
+    {
+        /** @var AsRole $role */
+        return $role->getPermissions()->contains($this);
     }
 }

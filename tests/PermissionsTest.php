@@ -3,6 +3,7 @@
 // it can use the config file to get the permissions enum
 
 use Illuminate\Support\Collection;
+use Statix\Sentra\Tests\Permissions;
 use Statix\Sentra\Tests\Roles;
 
 it('can use the config file to get the permissions enum', function () {
@@ -54,6 +55,19 @@ it('can return null if a permission does not have a description', function () {
     expect($permission->getDescription())->toBeNull();
 });
 
+// it can get the meta of a permission
+it('can get the meta of a permission', function () {
+    /** @var Permissions $permissionEnum */
+    $permissionEnum = config('sentra.permissions_enum');
+
+    $permission = $permissionEnum::PermissionOne;
+
+    $meta = $permission->getMeta();
+
+    expect($meta)->toBeInstanceOf(Collection::class);
+    expect($meta->get('key'))->toBe('value');
+});
+
 // it can get the roles of a permission
 it('can get the roles of a permission', function () {
     /** @var Permissions $permissionEnum */
@@ -101,4 +115,18 @@ it('can get only the indirect roles of a permission', function () {
     expect($roles)->toBeInstanceOf(Collection::class);
     expect($roles)->toHaveCount(1);
     expect($roles->first())->toBe(Roles::AdminUser);
+});
+
+// it can use the attachedToRole method to check for a role
+it('can use the attachedToRole method to check for a role', function () {
+    /** @var Permissions $permissionEnum */
+    $permissionEnum = config('sentra.permissions_enum');
+
+    $permission = $permissionEnum::CREATE_POST;
+
+    expect($permission->attachedToRole(Roles::SuperAdmin))->toBeTrue();
+
+    $permission = $permissionEnum::DELETE_POST;
+
+    expect($permission->attachedToRole(Roles::StandardUser))->toBeFalse();
 });

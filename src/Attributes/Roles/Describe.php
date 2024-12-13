@@ -21,7 +21,7 @@ class Describe extends BaseDescribe
         ?string $label = null,
         ?string $description = null,
         array $permissions = [],
-        array $meta = []
+        array $meta = [],
     ) {
         parent::__construct($label, $description, $meta);
 

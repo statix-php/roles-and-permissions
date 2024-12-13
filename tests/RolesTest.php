@@ -73,7 +73,7 @@ it('can get only the direct permissions of a role', function () {
 
     $role = $roleEnum::SuperAdmin;
 
-    $permissions = $role->directPermissions();
+    $permissions = $role->getDirectPermissions();
 
     expect($permissions)->toBeInstanceOf(Collection::class);
     expect($permissions)->toHaveCount(0);
@@ -86,7 +86,7 @@ it('can get only the indirect permissions of a role', function () {
 
     $role = $roleEnum::SuperAdmin;
 
-    $permissions = $role->indirectPermissions();
+    $permissions = $role->getIndirectPermissions();
 
     expect($permissions)->toBeInstanceOf(Collection::class);
     expect($permissions->count())->toBeGreaterThan(0);

@@ -91,34 +91,33 @@ trait AsRole
         }
 
         if ($includeIndirectPermissions) {
-            /** @var BackedEnum $enumClass */
-            $enumClass = config('sentra.permissions_enum');
-
-            $enum = collect($enumClass::cases());
-
-            $permissions = $permissions->merge($enum->filter(function ($permission) {
-                /** @var AsPermission $permission */
-                return $permission->getRoles(false)->contains($this);
-            }));
+            /** @var AsRole $this */
+            $permissions = $permissions->merge($this->getIndirectPermissions());
         }
 
         return $permissions;
     }
 
-    /**
-     * @todo rename this to getDirectPermissions
-     */
-    public function directPermissions(): Collection
+    public function getDirectPermissions(): Collection
     {
         return $this->getPermissions(false);
     }
 
-    /**
-     * @todo rename this to getIndirectPermissions
-     */
-    public function indirectPermissions(): Collection
+    public function getIndirectPermissions(): Collection
     {
-        return $this->getPermissions()->diff($this->directPermissions());
+        $permissions = collect();
+
+        /** @var BackedEnum $enumClass */
+        $enumClass = config('sentra.permissions_enum');
+
+        $enum = collect($enumClass::cases());
+
+        $permissions = $permissions->merge($enum->filter(function ($permission) {
+            /** @var AsPermission $permission */
+            return $permission->getRoles(false)->contains($this);
+        }));
+
+        return $permissions;
     }
 
     public function can(BackedEnum $permission): bool
@@ -138,12 +137,12 @@ trait AsRole
 
     public function hasDirectPermission(BackedEnum $permission): bool
     {
-        return $this->directPermissions()->contains($permission);
+        return $this->getDirectPermissions()->contains($permission);
     }
 
     public function hasIndirectPermission(BackedEnum $permission): bool
     {
-        return $this->indirectPermissions()->contains($permission);
+        return $this->getIndirectPermissions()->contains($permission);
     }
 
     /**

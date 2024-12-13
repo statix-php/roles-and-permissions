@@ -41,6 +41,9 @@ enum Permissions: string
         description: 'Permission one description',
         roles: [
             Roles::SuperAdmin,
+        ],
+        meta: [
+            'key' => 'value',
         ]
     )]
     case PermissionOne = 'permission_one';
