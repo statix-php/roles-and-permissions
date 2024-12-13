@@ -1,9 +1,10 @@
 {
     "name": "statix/sentra",
-    "description": "This is my package roles-and-permissions",
+    "description": "A lightweight Laravel roles and permissions package using Backed Enums.",
     "keywords": [
-        "Statix",
         "laravel",
+        "roles",
+        "permissions",
         "roles-and-permissions"
     ],
     "homepage": "https://github.com/statix-php/sentra",
@@ -30,8 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Statix\\Sentra\\": "src/",
-            "Statix\\Sentra\\Database\\Factories\\": "database/factories/"
+            "Statix\\Sentra\\": "src/"
         }
     },
     "autoload-dev": {
