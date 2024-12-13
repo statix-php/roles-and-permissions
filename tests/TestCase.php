@@ -21,6 +21,7 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        //
+        config()->set('sentra.roles_enum', Roles::class);
+        config()->set('sentra.permissions_enum', Permissions::class);
     }
 }

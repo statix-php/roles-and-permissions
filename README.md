@@ -58,3 +58,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Todo 
+
+- make it easier to assign a super-admin role, kinda of like the before method in laravel policies

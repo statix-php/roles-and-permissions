@@ -2,9 +2,6 @@
 
 namespace Statix\Sentra\Attributes;
 
-use Attribute;
-
-#[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 abstract class BaseDescribe
 {
     public ?string $label = null;

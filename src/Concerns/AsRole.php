@@ -126,7 +126,11 @@ trait AsRole
      */
     public function hasAnyPermission(array $permissions): bool
     {
-        return $this->getPermissions()->intersect($permissions)->isNotEmpty();
+        $assigned = $this->getPermissions()->map(fn ($permission) => $permission->value);
+
+        $check = collect($permissions)->map(fn ($permission) => $permission->value);
+
+        return $assigned->intersect($check)->isNotEmpty();
     }
 
     /**
@@ -134,8 +138,10 @@ trait AsRole
      */
     public function hasAllPermissions(array $permissions): bool
     {
-        $permissions = collect($permissions);
+        $assigned = $this->getPermissions()->map(fn ($permission) => $permission->value);
 
-        return $this->getPermissions()->intersect($permissions)->count() === $permissions->count();
+        $check = collect($permissions)->map(fn ($permission) => $permission->value);
+
+        return $assigned->intersect($check)->count() === $check->count();
     }
 }
