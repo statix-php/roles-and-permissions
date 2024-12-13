@@ -55,7 +55,7 @@ trait AsRole
         return $description;
     }
 
-    public function getMeta(): Collection
+    public function getMeta(mixed $key = null, mixed $default = null): mixed
     {
         /** @var BackedEnum $this */
         $reflection = new ReflectionEnumUnitCase(self::class, $this->name);
@@ -71,7 +71,15 @@ trait AsRole
             $meta = collect($describe->meta ?: []);
         }
 
-        return $meta;
+        if (is_null($key)) {
+            return $meta;
+        }
+
+        if ($meta->has($key)) {
+            return $meta->get($key);
+        }
+
+        return $default;
     }
 
     public function getPermissions(bool $includeIndirectPermissions = true): Collection

@@ -207,3 +207,15 @@ it('can retrieve the meta data of a role', function () {
 
     expect($meta->get('key'))->toBe('value');
 });
+
+// it can retrieve a specific key from the meta data of a role
+it('can retrieve a specific key from the meta data of a role', function () {
+    /** @var Roles $roleEnum */
+    $roleEnum = config('sentra.roles_enum');
+
+    $role = $roleEnum::RoleWithMeta;
+
+    expect($role->getMeta('key'))->toBe('value');
+    expect($role->getMeta('non-existent-key'))->toBeNull();
+    expect($role->getMeta('non-existent-key', 'default'))->toBe('default');
+});

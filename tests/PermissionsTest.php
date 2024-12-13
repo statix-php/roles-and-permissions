@@ -130,3 +130,15 @@ it('can use the attachedToRole method to check for a role', function () {
 
     expect($permission->attachedToRole(Roles::StandardUser))->toBeFalse();
 });
+
+// it can retrieve a specific key from the meta data of a permission
+it('can retrieve a specific key from the meta data of a permission', function () {
+    /** @var Permisssions $permissionEnum */
+    $permissionEnum = config('sentra.permissions_enum');
+
+    $permission = $permissionEnum::PermissionOne;
+
+    expect($permission->getMeta('key'))->toBe('value');
+    expect($permission->getMeta('non-existent-key'))->toBeNull();
+    expect($permission->getMeta('non-existent-key', 'default'))->toBe('default');
+});
