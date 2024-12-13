@@ -55,6 +55,25 @@ trait AsRole
         return $description;
     }
 
+    public function getMeta(): Collection
+    {
+        /** @var BackedEnum $this */
+        $reflection = new ReflectionEnumUnitCase(self::class, $this->name);
+
+        $attributes = $reflection->getAttributes(Describe::class);
+
+        $meta = collect();
+
+        if (count($attributes) > 0) {
+            /** @var Describe $describe */
+            $describe = $attributes[0]->newInstance();
+
+            $meta = collect($describe->meta ?: []);
+        }
+
+        return $meta;
+    }
+
     public function getPermissions(bool $includeIndirectPermissions = true): Collection
     {
         /** @var BackedEnum $this */
@@ -86,11 +105,17 @@ trait AsRole
         return $permissions;
     }
 
+    /**
+     * @todo rename this to getDirectPermissions
+     */
     public function directPermissions(): Collection
     {
         return $this->getPermissions(false);
     }
 
+    /**
+     * @todo rename this to getIndirectPermissions
+     */
     public function indirectPermissions(): Collection
     {
         return $this->getPermissions()->diff($this->directPermissions());
@@ -143,5 +168,31 @@ trait AsRole
         $check = collect($permissions)->map(fn ($permission) => $permission->value);
 
         return $assigned->intersect($check)->count() === $check->count();
+    }
+
+    public static function rolesWithPermission(BackedEnum $permission): Collection
+    {
+        /** @var BackedEnum $enumClass */
+        $enumClass = config('sentra.roles_enum');
+
+        $enum = collect($enumClass::cases());
+
+        return $enum->filter(function ($role) use ($permission) {
+            /** @var AsRole $role */
+            return $role->hasPermission($permission);
+        });
+    }
+
+    public static function rolesWithoutPermission(BackedEnum $permission): Collection
+    {
+        /** @var BackedEnum $enumClass */
+        $enumClass = config('sentra.roles_enum');
+
+        $enum = collect($enumClass::cases());
+
+        return $enum->filter(function ($role) use ($permission) {
+            /** @var AsRole $role */
+            return ! $role->hasPermission($permission);
+        });
     }
 }

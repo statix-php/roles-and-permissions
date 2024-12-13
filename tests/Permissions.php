@@ -44,4 +44,8 @@ enum Permissions: string
         ]
     )]
     case PermissionOne = 'permission_one';
+
+    #[Describe(
+    )]
+    case PermissionWithoutLabel = 'permission_without_label';
 }

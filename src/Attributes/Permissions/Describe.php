@@ -21,8 +21,9 @@ class Describe extends BaseDescribe
         ?string $label = null,
         ?string $description = null,
         array $roles = [],
+        array $meta = []
     ) {
-        parent::__construct($label, $description);
+        parent::__construct($label, $description, $meta);
 
         $this->roles = collect($roles);
     }

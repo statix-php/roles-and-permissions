@@ -167,3 +167,43 @@ it('can use the hasAllPermissions method to check for all permissions', function
 
     expect($role->hasAllPermissions([Permissions::CREATE_POST, Permissions::UPDATE_POST, Permissions::DELETE_POST]))->toBeFalse();
 });
+
+// it can retrieve the roles that have a specific permission
+it('can retrieve the roles that have a specific permission', function () {
+    /** @var Roles $roleEnum */
+    $roleEnum = config('sentra.roles_enum');
+
+    $roles = $roleEnum::rolesWithPermission(Permissions::DELETE_POST);
+
+    expect($roles)->toBeInstanceOf(Collection::class);
+
+    $adminUser = $roleEnum::AdminUser;
+
+    expect($roles->contains($adminUser))->toBeTrue();
+});
+
+// it can retrieve the roles that do not have a specific permission
+it('can retrieve the roles that do not have a specific permission', function () {
+    /** @var Roles $roleEnum */
+    $roleEnum = config('sentra.roles_enum');
+
+    $roles = $roleEnum::rolesWithoutPermission(Permissions::DELETE_POST);
+
+    expect($roles)->toBeInstanceOf(Collection::class);
+
+    $standardUser = $roleEnum::StandardUser;
+
+    expect($roles->contains($standardUser))->toBeTrue();
+});
+
+// it can retrieve the meta data of a role
+it('can retrieve the meta data of a role', function () {
+    /** @var Roles $roleEnum */
+    $roleEnum = config('sentra.roles_enum');
+
+    $role = $roleEnum::RoleWithMeta;
+
+    $meta = $role->getMeta();
+
+    expect($meta->get('key'))->toBe('value');
+});

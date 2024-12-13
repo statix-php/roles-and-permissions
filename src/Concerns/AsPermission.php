@@ -85,4 +85,14 @@ trait AsPermission
 
         return $roles;
     }
+
+    public function getDirectRoles(): Collection
+    {
+        return $this->getRoles(false);
+    }
+
+    public function getIndirectRoles(): Collection
+    {
+        return $this->getRoles()->diff($this->getDirectRoles());
+    }
 }

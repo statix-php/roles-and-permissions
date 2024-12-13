@@ -59,4 +59,12 @@ enum Roles: string
         ]
     )]
     case WithPermissions = 'with_permissions';
+
+    #[Describe(
+        label: 'Role With Meta',
+        meta: [
+            'key' => 'value',
+        ]
+    )]
+    case RoleWithMeta = 'role_with_meta';
 }
